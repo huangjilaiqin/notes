@@ -1,0 +1,20 @@
+docker 安装
+
+配置
+	/etc/sysconfig/docker
+状态查看
+	docker info
+登录/登出
+	docker login docker.oa.com:8080
+	docker logout docker.oa.com:8080
+
+docker images
+运行
+	交互式运行
+		docker run -t -i docker.oa.com:8080/gaia/helloworld /bin/bash
+	daemon方式运行
+		docker run -t -d docker.oa.com:8080/gaia/helloworld /bin/bash
+
+进入容器
+	docker ps
+	docker attach 44fc0f0582d9

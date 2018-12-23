@@ -1,2 +1,40 @@
 
+环境依赖
+	java环境依赖
+		检查java环境
+			java -version
+		查找java安装包
+			yum -y list java*
+		安装java环境
+			yum install java-1.8.0-openjdk-devel.x86_64
+
+
 安装
+	下载,解压即可
+	配置config/elasticsearch.yml
+		供外网访问
+			network.host: 被外网访问的ip(本机对外的ip)
+
+	启动
+		cd xxx/elasticsearch-6.5.3/bin
+		./elasticsearch
+			提示不能使用root用户运行
+		添加用户
+			useradd elastic
+		设置目录权限
+			chown -R elastic:elastic xxx/elasticsearch-6.5.3
+		deamon启动
+			./elasticsearch -d
+	常见错误
+		max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+			修改系统文件/etc/sysctl.conf
+				vm.max_map_count=262144
+			及时生效
+				sysctl -w vm.max_map_count=262144
+		system call filters failed to install; check the logs and fix your configuration or disable system call filters at your own risk
+			bootstrap.memory_lock: false
+			bootstrap.system_call_filter: false
+
+es基本操作
+	#查看所有索引(相当于mysql的show databases)
+		curl -X GET 'http://localhost:9200/_cat/indices?v'
