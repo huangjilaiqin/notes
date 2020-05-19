@@ -37,4 +37,4 @@
 
 es基本操作
 	#查看所有索引(相当于mysql的show databases)
-		curl -X GET 'http://localhost:9200/_cat/indices?v'
+		curl -X GET 'http://ip:9200/_cat/indices?v'

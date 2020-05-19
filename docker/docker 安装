@@ -1,20 +1,72 @@
 docker 安装
-
+配置yum源
+	yum install docker
+	yum erase docker
+gaia docker安装
+	https://git.code.oa.com/gaia/DockerFAQ/blob/master/install.md
 配置
 	/etc/sysconfig/docker
+	配置私有仓库
+		--insecure-registry docker.oa.com:8080 
+启动
+	service docker start
+	service docker stop
 状态查看
 	docker info
 登录/登出
 	docker login docker.oa.com:8080
 	docker logout docker.oa.com:8080
+搜索镜像
+	docker search docker.oa.com:8080/hello
+下载镜像
+	docker pull docker.io/golang
+查看本地镜像
+	docker images
 
-docker images
 运行
 	交互式运行
-		docker run -t -i docker.oa.com:8080/gaia/helloworld /bin/bash
-	daemon方式运行
+		docker run -it docker.oa.com:8080/gaia/helloworld /bin/bash
+	daemon方式运行(不要使用交互式的方式启动,会被attach这种方式Ctrl-D或exit结束整个进程)
 		docker run -t -d docker.oa.com:8080/gaia/helloworld /bin/bash
+		docker run -t -d docker.oa.com:8080/gaia/helloworld
 
 进入容器
 	docker ps
-	docker attach 44fc0f0582d9
+	docker attach 44fc0f0582d9     (只能进入交互式的启动)
+	docker exec -it 60cb49518c6f /bin/bash
+
+退出容器
+	exit
+	Ctrl-D
+
+容器状态
+	docker stats
+	docker inspect 501c9cc27985
+
+service docker-registry start
+service docker-registry stop
+
+编译镜像
+	https://studygolang.com/articles/15200
+	docker build -t go-web .
+	问题
+		1. level=error msg="Couldn't run auplink before unmount: exec: \"auplink\": executable file not found in $PATH"
+			yum search aufs
+			yum install aufs-util.x86_64
+		2. dirperm1 breaks the protection by the permission bits on the lower branch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

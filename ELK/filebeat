@@ -1,0 +1,56 @@
+filebeat
+
+
+配置
+	filebeat.yml
+
+	配置es路径
+		output.elasticsearch:
+		  # Array of hosts to connect to.
+		  hosts: ["10.241.95.66:9200"]
+	配置收集的日志文件
+		- type: log 
+		  enabled: true 
+		  close_inactive: 20m 
+		  scan_frequency: 1m
+		  #harvester_buffer_size: 16384
+		  harvester_buffer_size: 10485760
+		  paths:
+		    - /data/SmartFlow/log/Flow*.log
+		  include_lines: ['FLOW_REQ','FLOW_RSP','FLOW_END']
+		  fields:
+		    type: "monitor_interface"
+		    host: ${serverIP}
+	配置es的index
+		  index: "logs-%{[beat.version]}-%{+yyyy.MM.dd}"
+		  indices:
+		    - index: "monitor_task-%{[beat.version]}-%{+yyyy}"
+		      when.contains:
+		        message: "BEAT_MONITOR_TASK"
+		    - index: "monitor_interface-%{[beat.version]}-%{+yyyy}"
+		      when.equals:
+		        fields.type: "monitor_interface"
+	配置es的pipelines
+		  pipelines:
+		    - pipeline: monitor_task_pipeline
+		      when.equals:
+		        fields.type: "monitor_task"
+		    - pipeline: monitor_interface_pipeline
+		      when.contains:
+		        message: "FLOW_REQ"
+		    - pipeline: monitor_interface_rsp_pipeline
+		      when.contains:
+		        message: "FLOW_RSP"
+		    - pipeline: monitor_interface_costtime_pipeline
+		      when.contains:
+		        message: "FLOW_END"
+
+
+
+启动
+	前台启动
+		./filebeat -e -c filebeat.yml
+	后台启动
+		nohup ./filebeat -c filebeat.yml &
+
+
